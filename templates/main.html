@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Based Emotion Detection</title>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/Estyle.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin: 20px auto;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #45a049;
+        }
+
+        #imagePreview {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #f8f8f8;
+        }
+
+        #imagePreview img {
+            width: 100%; /* Ensure the image fills the width */
+            height: 100%; /* Ensure the image fills the height */
+            object-fit: cover; /* Scale image while maintaining aspect ratio */
+            border-radius: 10px; /* Match frame's rounded corners */
+        }
+
+        #placeholderText {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emotion Detection</h1>
+
+    <!-- Custom file upload form -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file" class="custom-file-upload">
+            Choose an Image
+        </label>
+        <input type="file" id="file" name="file" accept="image/*" required style="display:none;">
+        
+        <!-- Image preview area -->
+        <div id="imagePreview">
+            <span id="placeholderText">No image selected</span>
+        </div>
+
+        <button type="submit">Detect Emotion</button>
+    </form>
+
+    <h2 id="result"></h2>
+    <h3 id="feedback"></h3>
+
+    <script>
+        // Preview selected image
+        document.getElementById('file').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const imagePreview = document.getElementById('imagePreview');
+
+                // Clear previous content in the preview area
+                imagePreview.innerHTML = '';
+
+                // Create the image element
+                const imgElement = document.createElement('img');
+                imgElement.src = e.target.result;
+                imgElement.alt = 'Image Preview';
+
+                // Create the remove button
+                const removeButton = document.createElement('button');
+                removeButton.className = 'remove-image';
+                removeButton.textContent = '×';
+                removeButton.addEventListener('click', removeImage);
+
+                // Append the image and the button to the preview container
+                imagePreview.appendChild(imgElement);
+                imagePreview.appendChild(removeButton);
+            };
+
+            // Remove placeholder text when an image is selected
+            document.getElementById('placeholderText').style.display = 'none';
+            
+            reader.readAsDataURL(file);
+        });
+
+        // Remove image functionality
+        function removeImage() {
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.innerHTML = `<span id="placeholderText">No image selected</span>`;
+            document.getElementById('file').value = ''; // Clear the file input
+        }
+
+        // Handle form submission
+        document.getElementById('uploadForm').onsubmit = async function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            formData.append('file', document.getElementById('file').files[0]);
+    
+            const response = await fetch('/predict_emotion', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const result = await response.json();
+            document.getElementById('result').textContent = 'Detected Emotion: ' + result.emotion;
+            document.getElementById('feedback').textContent = 'Feedback: ' + result.feedback;
+        };
+    </script>
+</body>
+</html>
+
