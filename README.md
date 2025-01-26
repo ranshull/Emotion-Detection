@@ -60,6 +60,16 @@ This is a simple emotion recognition web application built with **Flask** and **
 - **Sad**: Consider talking to a friend or doing something you enjoy.
 - **Surprise**: Embrace the unexpected; life is full of surprises!
 
+**Data Collection:**
+Used a dataset with metrics like heart rate, respiration rate, and body temperature for stress prediction.
+ Collected facial images to train a model for detecting various emotional expressions.
+ 
+**Model Development:**
+Stress Prediction Model: A classification model that uses physical data to determine stress levels from 0 (low) to 4 (high).
+Emotion Detection Model: A model trained to recognize emotions such as happiness, sadness, and neutrality.
+Results: The stress prediction model achieved an accuracy of98.41%, and the emotion detection model reached a training accuracy of 72.79% with a validation accuracy of 66.52%.
+
+
 ## File Structure
 ```
 /project-root
@@ -72,4 +82,3 @@ This is a simple emotion recognition web application built with **Flask** and **
 
 ## License
 This project is open-source and available under the MIT License.
-```
