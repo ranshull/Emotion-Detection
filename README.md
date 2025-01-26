@@ -73,5 +73,3 @@ This is a simple emotion recognition web application built with **Flask** and **
 ## License
 This project is open-source and available under the MIT License.
 ```
-
-You can now copy and paste this into your `README.md` file. Let me know if you need any adjustments!
